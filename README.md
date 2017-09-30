@@ -55,7 +55,7 @@ electron-packager . Node-RED-Blockstack --icon=nodered.icns --platform=darwin --
 electron-packager . Node-RED-Blockstack --icon=nodered.icns --platform=win32 --arch=x64  --out=build --asar=true --overwrite --win32metadata.CompanyName='IBM Corp.' --win32metadata.ProductName='Blockstack Sample App'
 
 # build for Linux 64 bits
-electron-packager . Node-RED --icon=nodered.icns --platform=linux --arch=x64 --out=build --overwrite
+electron-packager . Node-RED-Blockstack --icon=nodered.icns --platform=linux --arch=x64 --out=build --overwrite
 ```
 
 Learn more about Electron and its API in the [documentation](http://electron.atom.io/docs/latest).
