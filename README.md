@@ -22,6 +22,10 @@ npm install && npm run clean
 npm start
 ```
 
+## Search Examples:
+Profile: `ryanshea.id`
+Project: `pr01-mdf9kesl9v92lclivkrfcgt1.id`  (note Projects for Souq will have a new `namespace` once the layer 2 token is out)
+
 ## TL:DR - building runtimes
 
 On OSX you can run `./buildall` to build binaries of "everything"... maybe...
