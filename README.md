@@ -16,11 +16,14 @@ From your command line:
 ```bash
 # Clone this repository
 git clone https://github.com/cryptocracy/electron-node-red-blockstack.git
+
 # Go into the repository
 cd electron-node-red-blockstack
+
 # Install dependencies with npm
 npm install && npm run clean
-# Run with npm
+
+# Run App with npm
 npm start
 ```
 
