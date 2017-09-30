@@ -98,10 +98,11 @@ Use `Node-RED` command to run. Flows are stored in `~/.node-red`.
 **Note**: This project was built to run on Mac OSX - To build for windows on other platforms you may need to use other tools.
 
 
-## Credit to
+### Credits
 - [electron-node-red](https://github.com/dceejay/electron-node-red)
 - [blockstack](https://github.com/blockstack/)
 - [node-red](https://github.com/node-red/)
+- [electron](https://github.com/electron)
 
 
 **Disclaimer**: I have no responsiblity, for any functionality or lack there of, in anything you may build from this repo.
