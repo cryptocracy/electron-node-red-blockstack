@@ -1,0 +1,10 @@
+{
+  "name": "Electron Node Red Blockstack",
+  "start_url": "localhost:9876",
+  "description": "Electron Node Red Blockstack",
+  "icons": [{
+    "src": "https://helloblockstack.com/icon-192x192.png",
+    "sizes": "192x192",
+    "type": "image/png"
+  }]
+}
