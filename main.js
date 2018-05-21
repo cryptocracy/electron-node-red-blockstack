@@ -148,50 +148,15 @@ let mainWindow;
 let authWindow;
 
 function createWindow() {
-    // Create the browser window.
-    mainWindow = new BrowserWindow({
-        autoHideMenuBar: true,
-        webPreferences: {
-            nodeIntegration: false
-        },
-        title: "Node-RED",
-        fullscreenable: true,
-        //titleBarStyle: "hidden",
-        width: 1024,
-        height: 768,
-        icon: __dirname + "/nodered.png"
+    
+
+    authWindow = new BrowserWindow({
+      width: 800,
+      height: 600,
     });
 
-    var webContents = mainWindow.webContents;
-    webContents.on('did-get-response-details', function(event, status, newURL, originalURL, httpResponseCode) {
-        if ((httpResponseCode == 404) && (newURL == ("http://localhost:"+listenPort+url))) {
-            setTimeout(webContents.reload, 200);
-        }
-        Menu.setApplicationMenu(Menu.buildFromTemplate(template));
-    });
-
-    // Open the DevTools.
-    //mainWindow.webContents.openDevTools();
-
-    mainWindow.webContents.on("new-window", function(e, url, frameName, disposition, options) {
-        // if a child window opens... modify any other options such as width/height, etc
-        // in this case make the child overlap the parent exactly...
-        var w = mainWindow.getBounds();
-        options.x = w.x;
-        options.y = w.y;
-        options.width = w.width;
-        options.height = w.height;
-        //re-use the same child name so all "2nd" windows use the same one.
-        //frameName = "child";
-    })
-
-    // Emitted when the window is closed.
-    mainWindow.on('closed', function() {
-        // Dereference the window object, usually you would store windows
-        // in an array if your app supports multi windows, this is the time
-        // when you should delete the corresponding element.
-        mainWindow = null;
-    });
+    // and load the index.html of the app.
+    authWindow.loadURL(`file://${__dirname}/index.html`);
 }
 
 // Called when Electron has finished initialization and is ready to create browser windows.
@@ -206,38 +171,15 @@ app.on('window-all-closed', function () {
     }
 });
 
-app.on('activate', function() {
-    // On OS X it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (mainWindow === null) {
-        createWindow();
-        mainWindow.loadURL("http://127.0.0.1:"+listenPort+url);
-        
-        authWindow = new BrowserWindow({
-          width: 800,
-          height: 600,
-        });
-
-        // and load the index.html of the app.
-        authWindow.loadURL(`file://${__dirname}/index.html`);
-    }
-});
-
-// Start the Node-RED runtime, then load the inital page
-RED.start().then(function() {
-    server.listen(listenPort,"127.0.0.1",function() {
-        mainWindow.loadURL("http://127.0.0.1:"+listenPort+url);
-        console.log(RED.nodes.getNode("fefd9c89.17999"))
-
-        authWindow = new BrowserWindow({
-          width: 800,
-          height: 600,
-        });
-
-        // and load the index.html of the app.
-        authWindow.loadURL(`file://${__dirname}/index.html`);
-    });
-});
+function createRed() {
+  // Start the Node-RED runtime, then load the inital page
+  RED.start().then(function() {
+      server.listen(listenPort,"127.0.0.1",function() {
+          mainWindow.loadURL("http://127.0.0.1:"+listenPort+url);
+          console.log(RED.nodes.getNode("fefd9c89.17999"))
+      });
+  });
+}
 
 ///////////////////////////////////////////////////////
 // All this Squirrel stuff is for the Windows installer
@@ -315,7 +257,6 @@ app.on('open-url', function (ev, url) {
 function authCallback(url) {
   if (username == null || username == "") {
     // Bring app window to front
-    mainWindow.focus();
     authWindow.focus();
 
     const queryDict = queryString.parse(url);
@@ -328,5 +269,52 @@ function authCallback(url) {
     username = blockstack.decodeToken(token).payload.username
 
     authWindow.close()
+
+    // Create the browser window.
+    mainWindow = new BrowserWindow({
+        autoHideMenuBar: true,
+        webPreferences: {
+            nodeIntegration: false
+        },
+        title: "Node-RED",
+        fullscreenable: true,
+        //titleBarStyle: "hidden",
+        width: 1024,
+        height: 768,
+        icon: __dirname + "/nodered.png"
+    });
+
+    var webContents = mainWindow.webContents;
+    webContents.on('did-get-response-details', function(event, status, newURL, originalURL, httpResponseCode) {
+        if ((httpResponseCode == 404) && (newURL == ("http://localhost:"+listenPort+url))) {
+            setTimeout(webContents.reload, 200);
+        }
+        Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+    });
+
+    // Open the DevTools.
+    //mainWindow.webContents.openDevTools();
+
+    mainWindow.webContents.on("new-window", function(e, url, frameName, disposition, options) {
+        // if a child window opens... modify any other options such as width/height, etc
+        // in this case make the child overlap the parent exactly...
+        var w = mainWindow.getBounds();
+        options.x = w.x;
+        options.y = w.y;
+        options.width = w.width;
+        options.height = w.height;
+        //re-use the same child name so all "2nd" windows use the same one.
+        //frameName = "child";
+    })
+
+    // Emitted when the window is closed.
+    mainWindow.on('closed', function() {
+        // Dereference the window object, usually you would store windows
+        // in an array if your app supports multi windows, this is the time
+        // when you should delete the corresponding element.
+        mainWindow = null;
+    });
+
+    createRed();
   }
 }
