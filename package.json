@@ -7,9 +7,7 @@
         "start": "electron main.js",
         "test": "echo \" Warning: no test specified \"",
         "watch": "nodemon --exec \"npm run start\" --ext js,css,json --ignore build/",
-
         "clean": "rm -rf ./build ../electron-bin && mkdir -p ./build ../electron-bin",
-
         "pack": "npm run clean && electron-packager . Node-RED --icon=nodered.icns --all --out=build --overwrite",
         "pack:osx": "electron-packager . Node-RED --icon=nodered.icns --platform=darwin --arch=x64 --out=build --overwrite",
         "pack:linux32": "electron-packager . Node-RED --icon=nodered.icns --platform=linux --arch=ia32 --out=build --overwrite && cp afterinst.sh build/Node-RED-linux-ia32/",
@@ -17,7 +15,6 @@
         "pack:win32": "electron-packager . Node-RED --icon=nodered.icns --platform=win32 --arch=ia32 --out=build --asar=true --overwrite --win32metadata.CompanyName='IBM Corp.' --win32metadata.ProductName='Node-RED Electron'",
         "pack:win64": "electron-packager . Node-RED --icon=nodered.icns --platform=win32 --arch=x64  --out=build --asar=true --overwrite --win32metadata.CompanyName='IBM Corp.' --win32metadata.ProductName='Node-RED Electron'",
         "pack:armv7l": "electron-packager . Node-RED --icon=nodered.icns --platform=linux --arch=armv7l --out=build --overwrite && cp afterinst.sh build/Node-RED-linux-armv7l",
-
         "build": "npm run clean && npm run build:osx && npm run build:linux64 && npm run build:linux32",
         "build:osx": "npm run pack:osx && appdmg appdmg.json ../electron-bin/Node-RED-Electron_$npm_package_version.dmg",
         "build:linux32": "npm run pack:linux32 && fpm -s dir -t deb -f -n node-red-electron -v $npm_package_version -m conway@uk.ibm.com -a i386   -p ../electron-bin -C build/Node-RED-linux-ia32 --prefix=/opt/node-red --after-install=afterinst.sh ./",
@@ -31,15 +28,17 @@
         "url": "git+https://github.com/dceejay/electron-node-red.git"
     },
     "dependencies": {
+        "appdmg": "^0.5.2",
+        "blockstack": "^17.2.0",
+        "express": "^4.14.0",
         "node-red": "*",
-        "node-red-dashboard": "*",
+        "node-red-contrib-play-audio": "*",
         "node-red-contrib-web-worldmap": "*",
+        "node-red-dashboard": "*",
+        "node-red-node-base64": "*",
         "node-red-node-geofence": "*",
         "node-red-node-random": "*",
-        "node-red-node-smooth": "*",
-        "node-red-contrib-play-audio": "*",
-        "node-red-node-base64": "*",
-        "express": "^4.14.0"
+        "node-red-node-smooth": "*"
     },
     "keywords": [
         "electron",
@@ -47,8 +46,12 @@
         "node-red"
     ],
     "contributors": [
-        {"name":"Dave Conway-Jones"},
-        {"name":"Nathanaël Lécaudé"}
+        {
+            "name": "Dave Conway-Jones"
+        },
+        {
+            "name": "Nathanaël Lécaudé"
+        }
     ],
     "license": "Apache-2.0",
     "bugs": {
@@ -60,5 +63,29 @@
         "electron-rebuild": "*",
         "electron-squirrel-startup": "*",
         "electron-winstaller": "2.5.2"
+    },
+    "make_targets": {
+        "win32": [
+            "squirrel"
+        ],
+        "darwin": [
+            "zip"
+        ],
+        "linux": [
+            "deb",
+            "rpm"
+        ]
+    },
+    "electronPackagerConfig": {
+        "packageManager": "npm",
+        "protocol": [
+            "nodered"
+        ],
+        "protocolName": [
+            "nodered"
+        ]
+    },
+    "electronWinstallerConfig": {
+        "name": "nodered"
     }
 }

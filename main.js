@@ -17,6 +17,9 @@ const electron = require('electron');
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const {Menu, MenuItem} = electron;
+const cp = require('child_process');
+const queryString = require('query-string');
+const blockstack = require('blockstack');
 
 // this should be placed at top of main.js to handle squirrel setup events quickly
 if (handleSquirrelEvent()) { return; }
@@ -33,6 +36,17 @@ var red_app = express();
 
 // Create a server
 var server = http.createServer(red_app);
+
+// Start process to serve manifest file
+const auth_server = cp.fork(__dirname + '/server.js');
+var username;
+
+// Quit server process if main app will quit
+app.on('will-quit', () => {
+  auth_server.send('quit');
+});
+
+app.setAsDefaultProtocolClient('nodered');
 
 var userdir;
 if (process.argv[1] && (process.argv[1] === "main.js")) {
@@ -131,6 +145,7 @@ var template = [{
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
+let authWindow;
 
 function createWindow() {
     // Create the browser window.
@@ -197,6 +212,14 @@ app.on('activate', function() {
     if (mainWindow === null) {
         createWindow();
         mainWindow.loadURL("http://127.0.0.1:"+listenPort+url);
+        
+        authWindow = new BrowserWindow({
+          width: 800,
+          height: 600,
+        });
+
+        // and load the index.html of the app.
+        authWindow.loadURL(`file://${__dirname}/index.html`);
     }
 });
 
@@ -204,6 +227,15 @@ app.on('activate', function() {
 RED.start().then(function() {
     server.listen(listenPort,"127.0.0.1",function() {
         mainWindow.loadURL("http://127.0.0.1:"+listenPort+url);
+        console.log(RED.nodes.getNode("fefd9c89.17999"))
+
+        authWindow = new BrowserWindow({
+          width: 800,
+          height: 600,
+        });
+
+        // and load the index.html of the app.
+        authWindow.loadURL(`file://${__dirname}/index.html`);
     });
 });
 
@@ -270,3 +302,31 @@ function handleSquirrelEvent() {
       return true;
   }
 };
+
+auth_server.on('message', (m) => {
+  authCallback(m.url)
+});
+
+app.on('open-url', function (ev, url) {
+  ev.preventDefault();
+  authCallback(url)
+});
+
+function authCallback(url) {
+  if (username == null || username == "") {
+    // Bring app window to front
+    mainWindow.focus();
+    authWindow.focus();
+
+    const queryDict = queryString.parse(url);
+    var token = queryDict["nodered://auth?authResponse"] ? queryDict["nodered://auth?authResponse"] : null;
+
+    const tokenPayload = blockstack.decodeToken(token).payload
+
+    const profileURL = tokenPayload.profile_url
+    console.log(blockstack.decodeToken(token).payload.username)
+    username = blockstack.decodeToken(token).payload.username
+
+    authWindow.close()
+  }
+}
