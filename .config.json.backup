@@ -762,9 +762,14 @@
     "view": {
      "view-grid-size": 20,
      "view-node-status": true,
-     "view-show-tips": true
+     "view-show-tips": true,
+     "view-snap-grid": true,
+     "view-show-grid": true
     }
-   }
+   },
+   "menu-menu-item-sidebar": true,
+   "menu-deploymenu-item-flow": true,
+   "menu-deploymenu-item-full": false
   }
  }
 }

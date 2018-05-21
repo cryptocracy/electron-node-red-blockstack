@@ -17,6 +17,7 @@ const electron = require('electron');
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const {Menu, MenuItem} = electron;
+const cors = require("cors");
 const cp = require('child_process');
 const queryString = require('query-string');
 const blockstack = require('blockstack');
@@ -176,7 +177,7 @@ function createRed() {
   RED.start().then(function() {
       server.listen(listenPort,"127.0.0.1",function() {
           mainWindow.loadURL("http://127.0.0.1:"+listenPort+url);
-          console.log(RED.nodes.getNode("fefd9c89.17999"))
+          // console.log("http://127.0.0.1:"+listenPort+url)
       });
   });
 }
@@ -318,3 +319,11 @@ function authCallback(url) {
     createRed();
   }
 }
+
+var info_app = express();
+var info_server = info_app.listen(9877);
+info_app.use(cors());
+
+info_app.get("/get_username", function (req, res) {
+  res.send(username);
+});
