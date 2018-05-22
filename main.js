@@ -293,29 +293,6 @@ function authCallback(url) {
         Menu.setApplicationMenu(Menu.buildFromTemplate(template));
     });
 
-    // Open the DevTools.
-    //mainWindow.webContents.openDevTools();
-
-    mainWindow.webContents.on("new-window", function(e, url, frameName, disposition, options) {
-        // if a child window opens... modify any other options such as width/height, etc
-        // in this case make the child overlap the parent exactly...
-        var w = mainWindow.getBounds();
-        options.x = w.x;
-        options.y = w.y;
-        options.width = w.width;
-        options.height = w.height;
-        //re-use the same child name so all "2nd" windows use the same one.
-        //frameName = "child";
-    })
-
-    // Emitted when the window is closed.
-    mainWindow.on('closed', function() {
-        // Dereference the window object, usually you would store windows
-        // in an array if your app supports multi windows, this is the time
-        // when you should delete the corresponding element.
-        mainWindow = null;
-    });
-
     createRed();
   }
 }

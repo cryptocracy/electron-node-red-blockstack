@@ -28,7 +28,6 @@
         "url": "git+https://github.com/dceejay/electron-node-red.git"
     },
     "dependencies": {
-        "appdmg": "^0.5.2",
         "blockstack": "^17.2.0",
         "express": "^4.14.0",
         "node-red": "*",
@@ -59,6 +58,7 @@
     },
     "homepage": "https://github.com/dceejay/electron-node-red#readme",
     "devDependencies": {
+        "appdmg": "^0.5.2",
         "electron": "^1.6.11",
         "electron-rebuild": "*",
         "electron-squirrel-startup": "*",
