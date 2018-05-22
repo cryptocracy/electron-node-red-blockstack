@@ -269,7 +269,7 @@ function authCallback(url) {
     console.log(blockstack.decodeToken(token).payload.username)
     username = blockstack.decodeToken(token).payload.username
 
-    authWindow.close()
+    authWindow.hide()
 
     // Create the browser window.
     mainWindow = new BrowserWindow({
