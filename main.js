@@ -152,8 +152,9 @@ function createWindow() {
     
 
     authWindow = new BrowserWindow({
-      width: 800,
-      height: 600,
+      width: 320,
+      height: 280,
+	  frame: false,
     });
 
     // and load the index.html of the app.
@@ -277,11 +278,11 @@ function authCallback(url) {
         webPreferences: {
             nodeIntegration: false
         },
-        title: "Node-RED",
+        title: "dApparatus",
         fullscreenable: true,
-        //titleBarStyle: "hidden",
-        width: 1024,
-        height: 768,
+        titleBarStyle: "hidden",
+        width: 500,
+        height: 820,
         icon: __dirname + "/nodered.png"
     });
 
